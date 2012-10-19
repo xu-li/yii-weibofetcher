@@ -103,6 +103,26 @@ class TencentWBApi extends OAuthApi
   }
 
   /**
+   * Set the openid
+   *
+   * @param string $openid
+   */
+  public function setOpenId($openid)
+  {
+    $this->openid = $openid;
+  }
+
+  /**
+   * Set the openkey
+   *
+   * @param string $openkey
+   */
+  public function setOpenKey($openkey)
+  {
+    $this->openkey = $openkey;
+  }
+
+  /**
    * Get openid
    *
    * @return string

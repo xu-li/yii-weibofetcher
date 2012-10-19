@@ -1,47 +1,11 @@
 <?php
 Yii::import("application.modules.weibofetcher.fetchers.BaseSocialWBFetcher");
-Yii::import("application.modules.weibofetcher.vendor.OAuthApi.TencentWBApi");
 
 /**
  * Tencent Weibo Fetcher
  */
 class TencentWBFetcher extends BaseSocialWBFetcher
 {
-  /**
-   * The api object
-   */
-  protected $api;
-
-  protected $statusToVOMapping = array(
-    'weibo_id' => 'id',
-    'author_id' => 'name',
-    'author_name' => 'nick',
-    'author_profile_image' => 'head',
-    'content' => 'text',
-    'source_link' => 'fromurl',
-    'source_text' => 'from',
-    'forwards' => 'count',
-    'comments' => 'mcount',
-    'created_at' => 'timestamp'
-  );
-
-  /**
-   * Constructor
-   */
-  public function __construct($oauth_configs)
-  {
-    $this->api = new TencentWBApi($oauth_configs);
-    if (!empty($oauth_configs['access_token']))
-    {
-      $this->api->setAccessToken($oauth_configs['access_token']);
-    }
-
-    if (!empty($oauth_configs['open_id']))
-    {
-      $this->api->setOpenIdAndKey($oauth_configs['open_id'], '');
-    }
-  }
-
   /**
    * @inheritDoc
    */
@@ -130,18 +94,5 @@ class TencentWBFetcher extends BaseSocialWBFetcher
     } while ($left > 0);
 
     return $result;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  protected function convertToWeiboVO($row)
-  {
-    $vo = new SocialWBVO($row, $this->statusToVOMapping);
-    $vo->platform = 'tencent';
-    // use the first image
-    $vo->thumb = $vo->original_image = empty($row['image']) ? '' : current($row['image']);
-
-    return $vo;
   }
 }

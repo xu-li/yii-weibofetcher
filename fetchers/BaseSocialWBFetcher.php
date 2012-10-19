@@ -5,6 +5,29 @@ Yii::import("application.modules.weibofetcher.models.SocialWBVO");
 abstract class BaseSocialWBFetcher implements ISocialWBFetcher
 {
   /**
+   * The api object
+   */
+  protected $api;
+
+  /**
+   * Constructor
+   */
+  public function __construct($api)
+  {
+    $this->setApi($api);
+  }
+
+  /**
+   * Set the api object
+   *
+   * @param OAuthApi $api
+   */
+  public function setApi($api)
+  {
+    $this->api = $api;
+  }
+
+  /**
    * @inheritDoc
    */
   public function fetch($keyword = '@', $limit = 30, $last_id = 0, $last_weibo_time = '')
@@ -33,19 +56,7 @@ abstract class BaseSocialWBFetcher implements ISocialWBFetcher
         $data = $this->fetchByMention($limit, $last_id, $last_weibo_time);
       }
 
-      $result = array();
-      if (!empty($data))
-      {
-        foreach ($data as $row)
-        {
-          $vo = $this->convertToWeiboVO($row);
-          $vo->keyword = $keyword;
-          $vo->fetched_at = time();
-          $result[] = $vo;
-        }
-      }
-
-      return $result;
+      return array('data' => $data, 'keyword' => $keyword);
     }
     catch (Exception $err)
     {
@@ -81,12 +92,4 @@ abstract class BaseSocialWBFetcher implements ISocialWBFetcher
    * @return array
    */
   abstract protected function fetchByTopic($topic, $limit = 30, $last_id = 0, $last_weibo_time = '');
-
-  /**
-   * Convert a raw weibo to a WeiboVO
-   *
-   * @param array $row
-   * @return SocialWBVO
-   */
-  abstract protected function convertToWeiboVO($row);
 }

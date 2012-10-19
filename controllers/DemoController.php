@@ -6,6 +6,12 @@ class DemoController extends CController
 {
   public function actionIndex()
   {
+    $manager = Yii::import("application.modules.weibofetcher.components.FetcherManager");
+
+    $manager = new $manager();
+    var_dump($manager->fetch('tencent'));
+
+    return ;
     /*
     $fetcher = new SinaWBFetcher(array(
       'client_id' => '51885333',
